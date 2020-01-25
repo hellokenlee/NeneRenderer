@@ -16,8 +16,9 @@ public:
 		struct { float s, t, p; };
 	};
 public:
-	vec3() = default;
-	vec3(float d0, float d1, float d2) { x = d0; y = d1; z = d2; };
+	vec3() {}
+	vec3(float d) : x(d), y(d), z(d) {}
+	vec3(float d0, float d1, float d2) : x(d0), y(d1), z(d2) {}
 	
 	inline const vec3& operator+() const { return *this; }
 	inline vec3 operator-() const { return vec3(-x, -y, -z); }

@@ -4,11 +4,18 @@
 
 #include "ray.h"
 #include "vec3.h"
+#include "sphere.h"
 
 using namespace std;
 
+sphere gsphere(vec3(0.0f, 0.0f, -1.0f), 0.5f);
+
 vec3 trace(const ray& r)
 {
+	if (gsphere.hit(r))
+	{
+		return vec3(1.0f, 0.0f, 0.0f);
+	}
 	vec3 unit_direction = normalize(r.direction());
 	float f = 0.5f * (unit_direction.y + 1.0f);
 	return (1.0f - f) * vec3(1.0f, 1.0f, 1.0f) + f * vec3(0.5f, 0.7f, 1.0f);

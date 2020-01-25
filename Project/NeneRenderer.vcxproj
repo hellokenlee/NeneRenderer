@@ -124,9 +124,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\main.cpp" />
+    <ClCompile Include="..\Source\sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\ray.h" />
+    <ClInclude Include="..\Source\sphere.h" />
     <ClInclude Include="..\Source\vec3.h" />
   </ItemGroup>
   <ItemGroup>

@@ -18,12 +18,18 @@
     <ClCompile Include="..\Source\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\sphere.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\vec3.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\ray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\sphere.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

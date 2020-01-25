@@ -6,12 +6,13 @@
 
 /*
 	Ray: p(t) = a + b * t
+	Where a is origin and b is direction
 */
 
 class ray
 {
 public:
-	ray() {}
+	ray() = delete;
 	ray(const vec3& a_, const vec3& b_): a(a_), b(b_) {}
 	inline vec3 origin() const { return a; }
 	inline vec3 direction() const { return b; }
