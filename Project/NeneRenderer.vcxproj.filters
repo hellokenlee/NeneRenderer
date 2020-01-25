@@ -23,6 +23,9 @@
     <ClInclude Include="..\Source\vec3.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\ray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\vec3.inl">
