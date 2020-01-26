@@ -1,4 +1,5 @@
 /*All Rights Reserved by KenLee hellokenlee@163.com*/
+#include <ctime>
 #include <vector>
 #include <memory>
 #include <cfloat>
@@ -8,6 +9,7 @@
 #include "ray.h"
 #include "vec3.h"
 #include "sphere.h"
+#include "camera.h"
 
 using namespace std;
 
@@ -34,18 +36,21 @@ vec3 trace(const ray& r)
 
 int main()
 {	
+	srand(time(nullptr));
+
 	ofstream image;
 	image.open("result.ppm");
 
-	int nx = 200;
-	int ny = 100;
+	int ns = 4;
+	int nx = 1024;
+	int ny = 512;
 
 	image << "P3\n" << nx << " " << ny << "\n255\n";
 
-	vec3 lower_left(-2.0f, -1.0f, -1.0f);
-	vec3 width(4.0f, 0.0f, 0.0f);
-	vec3 height(0.0f, 2.0f, 0.0f);
-	vec3 origin(0.0f, 0.0f, 0.0f);
+	camera cam(
+		vec3(0.0f, 0.0f, 0.0f), vec3(-2.0f, -1.0f, -1.0f),
+		vec3(4.0f, 0.0f, 0.0f), vec3(0.0f, 2.0f, 0.0f)
+	);
 	
 	world.emplace_back(new sphere(vec3(0.0f, 0.0f, -1.0f), 0.5f));
 	world.emplace_back(new sphere(vec3(0.0f, -100.5f, -1.0f), 100.f));
@@ -54,12 +59,21 @@ int main()
 	{
 		for (int x = 0; x < nx; ++x)
 		{ 
-			float u = float(x) / float(nx);
-			float v = float(y) / float(ny);
+			vec3 color(0.0f);
+			
+			for (int s = 0; s < ns; ++s)
+			{
+				float du = float(double(rand()) / double(RAND_MAX + 1));
+				float dv = float(double(rand()) / double(RAND_MAX + 1));
 
-			ray r(origin, lower_left + u * width + v * height);
+				float u = (float(x) + du) / float(nx);
+				float v = (float(y) + dv) / float(ny);
 
-			vec3 color = trace(r);
+				ray r = cam.get_ray(u, v);
+				color += trace(r);
+			}
+			
+			color /= float(ns);
 
 			int ir = int(255.99f * color.x);
 			int ig = int(255.99f * color.y);
@@ -69,5 +83,6 @@ int main()
 		}
 	}
 
+	image.close();
 	return 0;
 }

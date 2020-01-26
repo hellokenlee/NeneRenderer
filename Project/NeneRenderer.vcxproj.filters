@@ -21,6 +21,9 @@
     <ClCompile Include="..\Source\sphere.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\vec3.h">
@@ -33,6 +36,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\surface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

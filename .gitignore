@@ -4,8 +4,10 @@ Project/.vs/
 Project/Debug/
 Project/**/*.obj
 Project/*.ppm
+Project/x64/**/*
 
 #
+*.exe
 *.pyd
 *.exp
 
@@ -45,3 +47,4 @@ Project/*.ppm
 *.pidb
 *.svclog
 *.scc
+*.exe

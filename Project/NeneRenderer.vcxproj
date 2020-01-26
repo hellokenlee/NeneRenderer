@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\camera.cpp" />
     <ClCompile Include="..\Source\main.cpp" />
     <ClCompile Include="..\Source\sphere.cpp" />
   </ItemGroup>
@@ -131,6 +132,7 @@
     <ClInclude Include="..\Source\sphere.h" />
     <ClInclude Include="..\Source\surface.h" />
     <ClInclude Include="..\Source\vec3.h" />
+    <ClInclude Include="..\Source\camera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\vec3.inl" />
