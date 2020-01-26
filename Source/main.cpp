@@ -1,4 +1,7 @@
 /*All Rights Reserved by KenLee hellokenlee@163.com*/
+#include <vector>
+#include <memory>
+#include <cfloat>
 #include <fstream>
 #include <iostream>
 
@@ -8,14 +11,21 @@
 
 using namespace std;
 
-sphere gsphere(vec3(0.0f, 0.0f, -1.0f), 0.5f);
+vector<unique_ptr<surface>> world;
+
 
 vec3 trace(const ray& r)
 {
-	if (gsphere.hit(r))
+	// World
+	hitinfo h;
+	for (auto& s : world)
 	{
-		return vec3(1.0f, 0.0f, 0.0f);
+		if (s->hit(r, 0.0f, FLT_MAX, h))
+		{
+			return 0.5f * (h.normal + vec3(1.0f));
+		}
 	}
+	// Sky's Color
 	vec3 unit_direction = normalize(r.direction());
 	float f = 0.5f * (unit_direction.y + 1.0f);
 	return (1.0f - f) * vec3(1.0f, 1.0f, 1.0f) + f * vec3(0.5f, 0.7f, 1.0f);
@@ -36,7 +46,10 @@ int main()
 	vec3 width(4.0f, 0.0f, 0.0f);
 	vec3 height(0.0f, 2.0f, 0.0f);
 	vec3 origin(0.0f, 0.0f, 0.0f);
-
+	
+	world.emplace_back(new sphere(vec3(0.0f, 0.0f, -1.0f), 0.5f));
+	world.emplace_back(new sphere(vec3(0.0f, -100.5f, -1.0f), 100.f));
+	
 	for (int y = ny - 1; y >= 0; --y)
 	{
 		for (int x = 0; x < nx; ++x)

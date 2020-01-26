@@ -13,13 +13,13 @@ class ray
 {
 public:
 	ray() = delete;
-	ray(const vec3& a_, const vec3& b_): a(a_), b(b_) {}
-	inline vec3 origin() const { return a; }
-	inline vec3 direction() const { return b; }
-	inline vec3 point_at(const float& t) const { return a + b * t; }
+	ray(const vec3& a, const vec3& b): m_a(a), m_b(b) {}
+	inline vec3 origin() const { return m_a; }
+	inline vec3 direction() const { return m_b; }
+	inline vec3 point_at(const float& t) const { return m_a + m_b * t; }
 protected:
-	vec3 a;
-	vec3 b;
+	vec3 m_a;
+	vec3 m_b;
 };
 
 

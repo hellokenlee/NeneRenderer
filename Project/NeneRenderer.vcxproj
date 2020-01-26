@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="..\Source\ray.h" />
     <ClInclude Include="..\Source\sphere.h" />
+    <ClInclude Include="..\Source\surface.h" />
     <ClInclude Include="..\Source\vec3.h" />
   </ItemGroup>
   <ItemGroup>

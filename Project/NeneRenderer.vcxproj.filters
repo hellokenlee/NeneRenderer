@@ -32,6 +32,9 @@
     <ClInclude Include="..\Source\sphere.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\surface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\vec3.inl">
