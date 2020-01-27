@@ -13,7 +13,26 @@
 
 using namespace std;
 
+const float EPSILON = 0.001f;
+const float GAMMA = 2.2f;
+const float INV_GAMMA = 1.0f / GAMMA;
+
 vector<unique_ptr<surface>> world;
+
+vec3 random_in_unit_sphere()
+{
+	vec3 point;
+	do
+	{
+		vec3 cube = vec3(
+			float(double(rand()) / double(RAND_MAX)),
+			float(double(rand()) / double(RAND_MAX)),
+			float(double(rand()) / double(RAND_MAX))
+		);
+		point = 2.0f * cube - vec3(1.0f);
+	} while (point.squared_length() >= 1.0f);
+	return point;
+}
 
 
 vec3 trace(const ray& r)
@@ -22,9 +41,10 @@ vec3 trace(const ray& r)
 	hitinfo h;
 	for (auto& s : world)
 	{
-		if (s->hit(r, 0.0f, FLT_MAX, h))
+		if (s->hit(r, EPSILON, FLT_MAX, h))
 		{
-			return 0.5f * (h.normal + vec3(1.0f));
+			vec3 target = h.position + h.normal + random_in_unit_sphere();
+			return 0.5f * trace(ray(h.position, target - h.position));
 		}
 	}
 	// Sky's Color
@@ -36,7 +56,7 @@ vec3 trace(const ray& r)
 
 int main()
 {	
-	srand(time(nullptr));
+	srand((unsigned int)time(nullptr));
 
 	ofstream image;
 	image.open("result.ppm");
@@ -63,8 +83,8 @@ int main()
 			
 			for (int s = 0; s < ns; ++s)
 			{
-				float du = float(double(rand()) / double(RAND_MAX + 1));
-				float dv = float(double(rand()) / double(RAND_MAX + 1));
+				float du = float(double(rand()) / double(RAND_MAX));
+				float dv = float(double(rand()) / double(RAND_MAX));
 
 				float u = (float(x) + du) / float(nx);
 				float v = (float(y) + dv) / float(ny);
@@ -74,7 +94,12 @@ int main()
 			}
 			
 			color /= float(ns);
-
+			// Gamma correction: c = c^0.5
+			color = vec3(
+				pow(color.r, INV_GAMMA),
+				pow(color.g, INV_GAMMA), 
+				pow(color.b, INV_GAMMA)
+			);
 			int ir = int(255.99f * color.x);
 			int ig = int(255.99f * color.y);
 			int ib = int(255.99f * color.z);
