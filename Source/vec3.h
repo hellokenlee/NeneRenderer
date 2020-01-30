@@ -66,7 +66,11 @@ inline vec3 normalize(const vec3& v);
 
 inline vec3 reflect(const vec3& vin, const vec3& vnormal);
 
+inline bool refract(const vec3& vin, const vec3& vnormal, float ni_over_nt, vec3& refracted);
+
 inline vec3 random_unit_vec3();
+
+inline float schlick(float cosine, float ri);
 
 #include "vec3.inl"
 

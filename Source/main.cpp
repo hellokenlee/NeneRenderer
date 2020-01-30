@@ -13,6 +13,7 @@
 #include "camera.h"
 #include "diffuse.h"
 #include "metal.h"
+#include "dielectric.h"
 
 using namespace std;
 
@@ -76,7 +77,7 @@ int main()
 		shared_ptr<surface>(new sphere(
 				vec3(0.0f, 0.0f, -1.0f),
 				0.5f, 
-				shared_ptr<material>(new diffuse(vec3(0.8f, 0.3f, 0.3f)))
+				shared_ptr<material>(new diffuse(vec3(0.1f, 0.2f, 0.5f)))
 		))
 	);
 	world.add(
@@ -90,14 +91,21 @@ int main()
 		shared_ptr<surface>(new sphere(
 			vec3(1.0f, 0.0f, -1.0f),
 			0.5f,
-			shared_ptr<material>(new metal(vec3(0.8f, 0.6f, 0.2f), 1.0f))
+			shared_ptr<material>(new metal(vec3(0.8f, 0.6f, 0.2f), 0.0f))
 		))
 	);
 	world.add(
 		shared_ptr<surface>(new sphere(
 			vec3(-1.0f, 0.0f, -1.0f),
 			0.5f,
-			shared_ptr<material>(new metal(vec3(0.8f, 0.8f, 0.8f), 0.3f))
+			shared_ptr<material>(new dielectric(1.5f))
+		))
+	);
+	world.add(
+		shared_ptr<surface>(new sphere(
+			vec3(-1.0f, 0.0f, -1.0f),
+			-0.45f,
+			shared_ptr<material>(new dielectric(1.5f))
 		))
 	);
 	

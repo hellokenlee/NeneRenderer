@@ -129,6 +129,23 @@ inline vec3 reflect(const vec3& vin, const vec3& vnormal)
 	return vin - 2.0f * dot(vin, vnormal) * vnormal; 
 }
 
+inline bool refract(const vec3& vin, const vec3& vnormal, float ni_over_nt, vec3& refracted)
+{
+	
+	// Ref: https://zhuanlan.zhihu.com/p/31127076 
+	vec3 v = normalize(vin);
+	float d = dot(v, vnormal);
+	float sqr_cos_t = 1.0f - (ni_over_nt * ni_over_nt) * (1.0f - d * d);
+	// 
+	if (sqr_cos_t > 0)
+	{
+		refracted = ni_over_nt * (v - vnormal * d) - vnormal * sqrt(sqr_cos_t);
+		return true;
+	}
+	// Total internal reflection
+	return false;
+}
+
 inline vec3 random_unit_vec3()
 {
 	vec3 point;
@@ -142,6 +159,13 @@ inline vec3 random_unit_vec3()
 		point = 2.0f * cube - vec3(1.0f);
 	} while (point.squared_length() >= 1.0f);
 	return point;
+}
+
+inline float schlick(float cosine, float ri)
+{
+	float r0 = (1.0f - ri) / (1.0f + ri);
+	r0 = r0 * r0;
+	return r0 + (1.0f - r0) * pow((1.0f - cosine), 5.0f);
 }
 
 #endif // __VEC3_INL__
