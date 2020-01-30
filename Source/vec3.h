@@ -64,6 +64,10 @@ inline vec3 cross(const vec3& lhs, const vec3& rhs);
 
 inline vec3 normalize(const vec3& v);
 
+inline vec3 reflect(const vec3& vin, const vec3& vnormal);
+
+inline vec3 random_unit_vec3();
+
 #include "vec3.inl"
 
 #endif // __VEC3_H__

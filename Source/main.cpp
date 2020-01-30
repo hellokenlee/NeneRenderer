@@ -9,42 +9,34 @@
 #include "ray.h"
 #include "vec3.h"
 #include "sphere.h"
+#include "group.h"
 #include "camera.h"
+#include "diffuse.h"
+#include "metal.h"
 
 using namespace std;
 
+const int MAX_DEPTH = 50;
 const float EPSILON = 0.001f;
 const float GAMMA = 2.2f;
 const float INV_GAMMA = 1.0f / GAMMA;
 
-vector<unique_ptr<surface>> world;
 
-vec3 random_in_unit_sphere()
-{
-	vec3 point;
-	do
-	{
-		vec3 cube = vec3(
-			float(double(rand()) / double(RAND_MAX)),
-			float(double(rand()) / double(RAND_MAX)),
-			float(double(rand()) / double(RAND_MAX))
-		);
-		point = 2.0f * cube - vec3(1.0f);
-	} while (point.squared_length() >= 1.0f);
-	return point;
-}
-
-
-vec3 trace(const ray& r)
+vec3 trace(const ray& r, surface* world, int depth)
 {
 	// World
 	hitinfo h;
-	for (auto& s : world)
+	if (world->hit(r, EPSILON, FLT_MAX, h))
 	{
-		if (s->hit(r, EPSILON, FLT_MAX, h))
+		vec3 atten;
+		ray scartted(vec3(0.0f), vec3(0.0f));
+		if (depth < MAX_DEPTH && h.mtl != nullptr && h.mtl->scatter(r, h, atten, scartted))
 		{
-			vec3 target = h.position + h.normal + random_in_unit_sphere();
-			return 0.5f * trace(ray(h.position, target - h.position));
+			return atten * trace(scartted, world, depth + 1);
+		}
+		else
+		{
+			return vec3(0.0f, 0.0f, 0.0f);
 		}
 	}
 	// Sky's Color
@@ -62,8 +54,14 @@ int main()
 	image.open("result.ppm");
 
 	int ns = 4;
+	//*
 	int nx = 1024;
 	int ny = 512;
+	//*/
+	/*
+	int nx = 200;
+	int ny = 100;
+	//*/
 
 	image << "P3\n" << nx << " " << ny << "\n255\n";
 
@@ -72,8 +70,36 @@ int main()
 		vec3(4.0f, 0.0f, 0.0f), vec3(0.0f, 2.0f, 0.0f)
 	);
 	
-	world.emplace_back(new sphere(vec3(0.0f, 0.0f, -1.0f), 0.5f));
-	world.emplace_back(new sphere(vec3(0.0f, -100.5f, -1.0f), 100.f));
+	group world;
+
+	world.add(
+		shared_ptr<surface>(new sphere(
+				vec3(0.0f, 0.0f, -1.0f),
+				0.5f, 
+				shared_ptr<material>(new diffuse(vec3(0.8f, 0.3f, 0.3f)))
+		))
+	);
+	world.add(
+		shared_ptr<surface>(new sphere(
+				vec3(0.0f, -100.5f, -1.0f),
+				100.0f, 
+				shared_ptr<material>(new diffuse(vec3(0.8f, 0.8f, 0.0f)))
+		))
+	);
+	world.add(
+		shared_ptr<surface>(new sphere(
+			vec3(1.0f, 0.0f, -1.0f),
+			0.5f,
+			shared_ptr<material>(new metal(vec3(0.8f, 0.6f, 0.2f), 1.0f))
+		))
+	);
+	world.add(
+		shared_ptr<surface>(new sphere(
+			vec3(-1.0f, 0.0f, -1.0f),
+			0.5f,
+			shared_ptr<material>(new metal(vec3(0.8f, 0.8f, 0.8f), 0.3f))
+		))
+	);
 	
 	for (int y = ny - 1; y >= 0; --y)
 	{
@@ -90,7 +116,7 @@ int main()
 				float v = (float(y) + dv) / float(ny);
 
 				ray r = cam.get_ray(u, v);
-				color += trace(r);
+				color += trace(r, &world, 0);
 			}
 			
 			color /= float(ns);

@@ -18,6 +18,9 @@ bool sphere::hit(const ray& r, const float& mint, const float& maxt, hitinfo& h)
 	float delta = b * b - 4.0f * a * c;
 	if (delta > 0.0f)
 	{
+		//
+		h.mtl = m_material;
+		//
 		float t;
 		t= (-b - sqrt(delta)) / (2.0f * a);
 		if (t < maxt && t > mint)
@@ -36,5 +39,6 @@ bool sphere::hit(const ray& r, const float& mint, const float& maxt, hitinfo& h)
 			return true;
 		}
 	}
+	h.mtl = nullptr;
 	return false;
 }

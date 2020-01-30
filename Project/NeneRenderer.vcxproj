@@ -124,10 +124,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\camera.cpp" />
+    <ClCompile Include="..\Source\diffuse.cpp" />
+    <ClCompile Include="..\Source\group.cpp" />
     <ClCompile Include="..\Source\main.cpp" />
+    <ClCompile Include="..\Source\metal.cpp" />
     <ClCompile Include="..\Source\sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\diffuse.h" />
+    <ClInclude Include="..\Source\group.h" />
+    <ClInclude Include="..\Source\metal.h" />
+    <ClInclude Include="..\Source\material.h" />
     <ClInclude Include="..\Source\ray.h" />
     <ClInclude Include="..\Source\sphere.h" />
     <ClInclude Include="..\Source\surface.h" />

@@ -124,4 +124,24 @@ inline vec3 normalize(const vec3& v)
 	return v / v.length();
 }
 
+inline vec3 reflect(const vec3& vin, const vec3& vnormal)
+{
+	return vin - 2.0f * dot(vin, vnormal) * vnormal; 
+}
+
+inline vec3 random_unit_vec3()
+{
+	vec3 point;
+	do
+	{
+		vec3 cube = vec3(
+			float(double(rand()) / double(RAND_MAX)),
+			float(double(rand()) / double(RAND_MAX)),
+			float(double(rand()) / double(RAND_MAX))
+		);
+		point = 2.0f * cube - vec3(1.0f);
+	} while (point.squared_length() >= 1.0f);
+	return point;
+}
+
 #endif // __VEC3_INL__

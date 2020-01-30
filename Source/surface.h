@@ -3,6 +3,9 @@
 #define __SURFACE_H__
 
 #include "ray.h"
+#include <memory>
+
+class material;
 
 /*
 	Hit information
@@ -13,6 +16,7 @@ struct hitinfo
 	float time;
 	vec3 normal;
 	vec3 position;
+	std::shared_ptr<material> mtl;
 };
 
 
@@ -23,6 +27,7 @@ struct hitinfo
 class surface
 {
 public:
+	surface() = default;
 	virtual bool hit(const ray& r, const float& mint, const float& maxt, hitinfo& h) const = 0;
 };
 
