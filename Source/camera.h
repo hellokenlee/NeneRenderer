@@ -10,6 +10,7 @@ class camera
 {
 public:
 	camera() = delete;
+	camera(vec3 position, vec3 target, vec3 up, float fov, float ratio);
 	camera(const vec3& o, const vec3& l, const vec3& w, const vec3& h);
 	ray get_ray(const float u, const float v);
 protected:

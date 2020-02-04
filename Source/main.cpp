@@ -54,11 +54,12 @@ int main()
 	ofstream image;
 	image.open("result.ppm");
 
-	int ns = 4;
+	int ns = 32;
 	//*
 	int nx = 1024;
 	int ny = 512;
 	//*/
+	
 	/*
 	int nx = 200;
 	int ny = 100;
@@ -67,8 +68,8 @@ int main()
 	image << "P3\n" << nx << " " << ny << "\n255\n";
 
 	camera cam(
-		vec3(0.0f, 0.0f, 0.0f), vec3(-2.0f, -1.0f, -1.0f),
-		vec3(4.0f, 0.0f, 0.0f), vec3(0.0f, 2.0f, 0.0f)
+		vec3(-2.0f, 2.0f, 1.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f), 
+		90.0f, float(nx) / float(ny)
 	);
 	
 	group world;
