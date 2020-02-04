@@ -68,7 +68,9 @@ inline vec3 reflect(const vec3& vin, const vec3& vnormal);
 
 inline bool refract(const vec3& vin, const vec3& vnormal, float ni_over_nt, vec3& refracted);
 
-inline vec3 random_unit_vec3();
+inline vec3 random_unit_disk();
+
+inline vec3 random_unit_sphere();
 
 inline float schlick(float cosine, float ri);
 

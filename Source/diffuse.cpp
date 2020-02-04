@@ -4,7 +4,7 @@
 
 bool diffuse::scatter(const ray& in, const hitinfo& h, vec3& atten, ray& scattered) const
 {	
-	vec3 target = h.position + h.normal + random_unit_vec3();
+	vec3 target = h.position + h.normal + random_unit_sphere();
 	scattered = ray(h.position, target - h.position);
 	atten = m_albedo;
 	return true;

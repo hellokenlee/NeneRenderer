@@ -146,7 +146,22 @@ inline bool refract(const vec3& vin, const vec3& vnormal, float ni_over_nt, vec3
 	return false;
 }
 
-inline vec3 random_unit_vec3()
+inline vec3 random_unit_disk()
+{
+	vec3 point;
+	do 
+	{
+		vec3 square = vec3(
+			float(double(rand()) / double(RAND_MAX)),
+			float(double(rand()) / double(RAND_MAX)),
+			0.0f
+		);
+		point = 2.0f * square - vec3(1.0f, 1.0f, 0.0f);
+	} while (dot(point, point) > 1.0f);
+	return point;
+}
+
+inline vec3 random_unit_sphere()
 {
 	vec3 point;
 	do

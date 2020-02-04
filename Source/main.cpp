@@ -50,11 +50,11 @@ vec3 trace(const ray& r, surface* world, int depth)
 int main()
 {	
 	srand((unsigned int)time(nullptr));
-
+	
 	ofstream image;
 	image.open("result.ppm");
 
-	int ns = 32;
+	int ns = 64;
 	//*
 	int nx = 1024;
 	int ny = 512;
@@ -68,8 +68,9 @@ int main()
 	image << "P3\n" << nx << " " << ny << "\n255\n";
 
 	camera cam(
-		vec3(-2.0f, 2.0f, 1.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f), 
-		90.0f, float(nx) / float(ny)
+		vec3(3.0f, 3.0f, 2.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f), 
+		20.0f, float(nx) / float(ny),
+		2.0f
 	);
 	
 	group world;
@@ -141,6 +142,7 @@ int main()
 
 			image << ir << " " << ig << " " << ib << "\n";
 		}
+		printf("Progress: %.2f\%%\n", float(ny - y) / float(ny) * 100.0f);
 	}
 
 	image.close();

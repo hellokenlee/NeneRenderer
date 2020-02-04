@@ -5,7 +5,7 @@
 bool metal::scatter(const ray& in, const hitinfo& h, vec3& atten, ray& scattered) const
 {
 	vec3 reflected = reflect(normalize(in.direction()), h.normal);
-	scattered = ray(h.position, reflected + m_roughness * random_unit_vec3());
+	scattered = ray(h.position, reflected + m_roughness * random_unit_sphere());
 	atten = m_albedo;
 	return (dot(scattered.direction(), h.normal) > 0);
 }
