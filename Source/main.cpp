@@ -47,6 +47,105 @@ vec3 trace(const ray& r, surface* world, int depth)
 }
 
 
+std::shared_ptr<group> create_random_scene()
+{
+	int n = 500;
+	group* world = new group{};
+
+	// Ground
+	world->add(
+		shared_ptr<surface>(new sphere(
+			vec3(0.0f, -1000.0f, 0.0f),
+			1000.0f,
+			shared_ptr<material>(new diffuse(vec3(0.5f, 0.5f, 0.5f)))
+		))
+	);
+
+	// Many spheres
+	//*
+	for (int a = -11; a < 11; ++a)
+	{
+		for (int b = -11; b < 11; ++b)
+		{
+			float dice = float(rand()) / float(RAND_MAX);
+			vec3 center(
+				a + 0.9f * float(rand()) / float(RAND_MAX),
+				0.2f,
+				b + 0.9f * float(rand()) / float(RAND_MAX)
+			);
+			if ((center - vec3(4.0f, 0.2f, 0.0f)).length() > 0.9)
+			{
+				if (dice < 0.6f)
+				{
+					// Diffuse material
+					float r = float(rand()) / float(RAND_MAX);
+					float g = float(rand()) / float(RAND_MAX);
+					float b = float(rand()) / float(RAND_MAX);
+					world->add(
+						shared_ptr<surface>(new sphere(
+							center,
+							0.2f,
+							shared_ptr<material>(new diffuse(vec3(r, g, b)))
+						))
+					);
+				}
+				else if (dice < 0.9f)
+				{
+					// Metal material
+					float r = 0.5f * (1.0f + float(rand()) / float(RAND_MAX));
+					float g = 0.5f * (1.0f + float(rand()) / float(RAND_MAX));
+					float b = 0.5f * (1.0f + float(rand()) / float(RAND_MAX));
+					float roughness = 0.5f * float(rand()) / float(RAND_MAX);
+					world->add(
+						shared_ptr<surface>(new sphere(
+							center,
+							0.2f,
+							shared_ptr<material>(new metal(vec3(r, g, b), roughness))
+						))
+					);
+				}
+				else
+				{
+					// Glass material
+					world->add(
+						shared_ptr<surface>(new sphere(
+							center,
+							0.2f,
+							shared_ptr<material>(new dielectric(1.5))
+						))
+					);
+				}
+			}
+		}
+	}
+	//*/
+
+	// Three main spheres
+	world->add(
+		shared_ptr<surface>(new sphere(
+			vec3(0.0f, 1.0f, 0.0f),
+			1.0f,
+			shared_ptr<material>(new dielectric(1.5))
+		))
+	);
+	world->add(
+		shared_ptr<surface>(new sphere(
+			vec3(-4.0f, 1.0f, 0.0f),
+			1.0f,
+			shared_ptr<material>(new diffuse(vec3(0.4f, 0.2f, 0.1f)))
+		))
+	);
+	world->add(
+		shared_ptr<surface>(new sphere(
+			vec3(4.0f, 1.0f, 0.0f),
+			1.0f,
+			shared_ptr<material>(new metal(vec3(0.7f, 0.6f, 0.5f), 0.0f))
+		))
+	);
+
+	return shared_ptr<group>(world);
+}
+
 int main()
 {	
 	srand((unsigned int)time(nullptr));
@@ -54,62 +153,27 @@ int main()
 	ofstream image;
 	image.open("result.ppm");
 
-	int ns = 64;
-	//*
+	int ns = 32;
+	/*
 	int nx = 1024;
 	int ny = 512;
 	//*/
 	
-	/*
-	int nx = 200;
-	int ny = 100;
+	//*
+	int nx = 720;
+	int ny = 480;
 	//*/
 
 	image << "P3\n" << nx << " " << ny << "\n255\n";
 
 	camera cam(
-		vec3(3.0f, 3.0f, 2.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f), 
+		vec3(13.0f, 2.0f, 3.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), 
 		20.0f, float(nx) / float(ny),
-		2.0f
+		0.1f, 10.0f
 	);
 	
-	group world;
+	shared_ptr<group> world = create_random_scene();
 
-	world.add(
-		shared_ptr<surface>(new sphere(
-				vec3(0.0f, 0.0f, -1.0f),
-				0.5f, 
-				shared_ptr<material>(new diffuse(vec3(0.1f, 0.2f, 0.5f)))
-		))
-	);
-	world.add(
-		shared_ptr<surface>(new sphere(
-				vec3(0.0f, -100.5f, -1.0f),
-				100.0f, 
-				shared_ptr<material>(new diffuse(vec3(0.8f, 0.8f, 0.0f)))
-		))
-	);
-	world.add(
-		shared_ptr<surface>(new sphere(
-			vec3(1.0f, 0.0f, -1.0f),
-			0.5f,
-			shared_ptr<material>(new metal(vec3(0.8f, 0.6f, 0.2f), 0.0f))
-		))
-	);
-	world.add(
-		shared_ptr<surface>(new sphere(
-			vec3(-1.0f, 0.0f, -1.0f),
-			0.5f,
-			shared_ptr<material>(new dielectric(1.5f))
-		))
-	);
-	world.add(
-		shared_ptr<surface>(new sphere(
-			vec3(-1.0f, 0.0f, -1.0f),
-			-0.45f,
-			shared_ptr<material>(new dielectric(1.5f))
-		))
-	);
 	
 	for (int y = ny - 1; y >= 0; --y)
 	{
@@ -126,7 +190,7 @@ int main()
 				float v = (float(y) + dv) / float(ny);
 
 				ray r = cam.get_ray(u, v);
-				color += trace(r, &world, 0);
+				color += trace(r, world.get(), 0);
 			}
 			
 			color /= float(ns);
@@ -142,7 +206,7 @@ int main()
 
 			image << ir << " " << ig << " " << ib << "\n";
 		}
-		printf("Progress: %.2f\%%\n", float(ny - y) / float(ny) * 100.0f);
+		printf("Progress: %.2f%%\n", float(ny - y) / float(ny) * 100.0f);
 	}
 
 	image.close();
